@@ -3,14 +3,24 @@ import random
 from numpy import *
 from neural_network import *
 import text
+import os.path
 
 X = text.data
 Y = text.target
 X_len = len(X)
+
+##########
+#
+# Get the feature vector from the training samples
+#
+##########
+feature_vector_list = []
+for i in range(X_len):
+	feature_vector_list.append(text.zoning(X[i], 4, 4))
+
 from sklearn.cross_validation import train_test_split
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = .1)
-
+X_train, X_test, Y_train, Y_test = train_test_split(feature_vector_list, Y, test_size = .1)
 len_Y_train = len(Y_train)
 
 num_input_nodes = 16
@@ -56,7 +66,7 @@ def write_weights(fname, i2h, h2o, hb, ob):
 
 		file.write("%f\n"%ob)
 
-#hidden_layer_weights, hidden_layer_bias, output_layer_weights, output_layer_bias = read_weights("weights.txt")
+hidden_layer_weights, hidden_layer_bias, output_layer_weights, output_layer_bias = read_weights("weights.txt")
 
 my_classifier = NeuralNetwork(num_input_nodes, num_hidden_nodes, num_output_nodes, hidden_layer_weights=hidden_layer_weights, 
 	hidden_layer_bias=hidden_layer_bias, output_layer_weights=output_layer_weights, output_layer_bias=output_layer_bias)
@@ -80,12 +90,22 @@ for i in range(10):
 	print i
 	my_classifier.train(X_train, bin_Y_train)
 
+
 bin_predictions = my_classifier.predict(X_test)
 
 predictions = []
 
 for label in bin_predictions:
-	index = label.index(1)
+	new_label = []
+	index = -1
+
+	for i in label:
+		new_label.append(int(round(i)))
+	for j in new_label:
+		if j == 1:
+			index = j
+			break
+
 	char = text.convert_int_to_char(index)
 	predictions.append(char)
 #print predictions
