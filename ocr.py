@@ -11,49 +11,74 @@ from sklearn.cross_validation import train_test_split
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = .1)
 
+len_Y_train = len(Y_train)
+
 num_input_nodes = 16
 num_hidden_nodes = 30
 num_output_nodes = 26
 
-hidden_layer_weights = []
-output_layer_weights = []
-hidden_layer_bias = 0.35
-output_layer_bias = 0.6
 # hidden_layer_weights=[round(random.random()*random.randint(-1, 2), 3) for i in range(num_input_nodes*num_hidden_nodes)]
 # output_layer_weights=[round(random.random()*random.randint(-1, 2), 3) for i in range(num_hidden_nodes*num_output_nodes)]
 
-# with open("weights.txt") as file:
+def read_weights(fname):
+	hidden_layer_weights = []
+	output_layer_weights = []
+	hidden_layer_bias = 0.35
+	output_layer_bias = 0.6
 
-# 	for i in range(num_input_nodes):
-# 		for h in range(num_hidden_nodes):
-# 			hidden_layer_weights.append(float(file.readline()))
+	if os.path.exists(fname):
+		with open(fname) as file:
+			for i in range(num_input_nodes):
+				for h in range(num_hidden_nodes):
+					hidden_layer_weights.append(float(file.readline()))
 
-# 	hidden_layer_bias = float(file.readline())
+			hidden_layer_bias = float(file.readline())
 
-# 	for h in range(num_hidden_nodes):
-# 		for o in range(num_output_nodes):
-# 			output_layer_weights.append(float(file.readline()))
+			for h in range(num_hidden_nodes):
+				for o in range(num_output_nodes):
+					output_layer_weights.append(float(file.readline()))
 
-# 	output_layer_bias = float(file.readline())
+			output_layer_bias = float(file.readline())
+		
+	return hidden_layer_weights, hidden_layer_bias, output_layer_weights, output_layer_bias
 
-len_Y_train = len(Y_train)
+def write_weights(fname, i2h, h2o, hb, ob):
+	with open(fname, 'w') as file:
+		for i in i2h:
+			for h in i:
+				file.write("%f\n"%h)
+
+		file.write("%f\n"%hb)
+
+		for h in h2o:
+			for o in h:
+				file.write("%f\n"%o)
+
+		file.write("%f\n"%ob)
+
+#hidden_layer_weights, hidden_layer_bias, output_layer_weights, output_layer_bias = read_weights("weights.txt")
 
 my_classifier = NeuralNetwork(num_input_nodes, num_hidden_nodes, num_output_nodes, hidden_layer_weights=hidden_layer_weights, 
 	hidden_layer_bias=hidden_layer_bias, output_layer_weights=output_layer_weights, output_layer_bias=output_layer_bias)
-#my_classifier = NeuralNetwork(num_input_nodes, num_hidden_nodes, num_output_nodes)
-bin_Y_train = [[0]*26 for i in range(len_Y_train)]
 
+##########
+#
+# Convert the output label to a binary array format
+#
+##########
+bin_Y_train = [[0]*26 for i in range(len_Y_train)]
 for i in range(len_Y_train):
 	index = text.convert_char_to_int(Y_train[i]) - text.convert_char_to_int('a')
 	bin_Y_train[i][index] = 1
-	# print Y_train[i], bin_Y_train[i]
 
-
+##########
+#
+# Training the network
+#
+##########
 for i in range(10):
 	print i
 	my_classifier.train(X_train, bin_Y_train)
-
-##########################
 
 bin_predictions = my_classifier.predict(X_test)
 
@@ -63,40 +88,31 @@ for label in bin_predictions:
 	index = label.index(1)
 	char = text.convert_int_to_char(index)
 	predictions.append(char)
+#print predictions
 
-# #print predictions
+##########
+#
+# print prediction v/s target and calculate the accuracy
+#
+##########
 for i in range(len(predictions)):
-	print "prediction = ",predictions[i], "actual output = ",Y_test[i]
+	print "prediction = ",predictions[i], "target output = ",Y_test[i]
 print len(predictions)
 
 from sklearn.metrics import accuracy_score
 print accuracy_score(Y_test, predictions)
 
+##########
+#
+# write the weights and bias to a file
+#
+##########
 i2h = my_classifier.get_input_to_hidden_weights()
 h2o = my_classifier.get_hidden_to_output_weights()
+hb = my_classifier.hidden_layer.bias
+ob = my_classifier.output_layer.bias
 
-with open("weights.txt", 'w') as file:
-	for i in i2h:
-		for h in i:
-			file.write("%f\n"%h)
-
-	hb = my_classifier.hidden_layer.bias
-	file.write("%f\n"%hb)
-
-	for h in h2o:
-		for o in h:
-			file.write("%f\n"%o)
-
-	ob = my_classifier.output_layer.bias
-	file.write("%f\n"%ob)
+write_weights("weights.txt", i2h, h2o, hb, ob)
 
 ###########################
 
-# for i in range(height):
-# 	for j in range(width)
-# 	print img_matrix[i*width + j]," "
-
-# ' '.join('{0:08b}'.format(ord(x), 'b') for x in image_data)
-#print "image_data = ", repr(image_data)
-
-# img = Image.open('./training/lower/A/0.gif')
