@@ -30,6 +30,10 @@ num_output_nodes = 26
 # hidden_layer_weights=[round(random.random()*random.randint(-1, 2), 3) for i in range(num_input_nodes*num_hidden_nodes)]
 # output_layer_weights=[round(random.random()*random.randint(-1, 2), 3) for i in range(num_hidden_nodes*num_output_nodes)]
 
+def log(fname, text):
+	with open(fname, "a+") as file:
+		file.write(text)
+
 def read_weights(fname):
 	hidden_layer_weights = []
 	output_layer_weights = []
@@ -71,6 +75,8 @@ hidden_layer_weights, hidden_layer_bias, output_layer_weights, output_layer_bias
 my_classifier = NeuralNetwork(num_input_nodes, num_hidden_nodes, num_output_nodes, hidden_layer_weights=hidden_layer_weights, 
 	hidden_layer_bias=hidden_layer_bias, output_layer_weights=output_layer_weights, output_layer_bias=output_layer_bias)
 
+alpha = my_classifier.LEARNING_RATE
+
 ##########
 #
 # Convert the output label to a binary array format
@@ -86,7 +92,8 @@ for i in range(len_Y_train):
 # Training the network
 #
 ##########
-for i in range(10):
+epochs = 10
+for i in range(epochs):
 	print i
 	my_classifier.train(X_train, bin_Y_train)
 
@@ -101,10 +108,12 @@ for label in bin_predictions:
 
 	for i in label:
 		new_label.append(int(round(i)))
-	for j in new_label:
-		if j == 1:
+	for j in range(len(new_label)):
+		if new_label[j] == 1:
 			index = j
 			break
+
+	print new_label
 
 	char = text.convert_int_to_char(index)
 	predictions.append(char)
@@ -120,7 +129,8 @@ for i in range(len(predictions)):
 print len(predictions)
 
 from sklearn.metrics import accuracy_score
-print accuracy_score(Y_test, predictions)
+accuracy = accuracy_score(Y_test, predictions)
+print accuracy
 
 ##########
 #
@@ -133,6 +143,8 @@ hb = my_classifier.hidden_layer.bias
 ob = my_classifier.output_layer.bias
 
 write_weights("weights.txt", i2h, h2o, hb, ob)
+
+log("zoning_log.txt", "\n["+str(epochs)+", "+str(alpha)+"] : "+str(accuracy))
 
 ###########################
 

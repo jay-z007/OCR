@@ -2,7 +2,7 @@ import random
 import math
 
 class NeuralNetwork:
-    LEARNING_RATE = 0.5
+    LEARNING_RATE = 0.05
 
     def __init__(self, num_inputs, num_hidden, num_outputs, hidden_layer_weights = None, hidden_layer_bias = None, output_layer_weights = None, output_layer_bias = None):
         self.num_inputs = num_inputs
