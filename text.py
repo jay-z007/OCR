@@ -42,6 +42,12 @@ def binarization(pixels, size):
 
 	return pixels
 
+
+####################
+#
+#	Feature extraction using zoning method
+#
+####################
 def zoning(pixels, zone_num_x, zone_num_y):
 	height = len(pixels)
 	width = len(pixels[0])
@@ -57,9 +63,6 @@ def zoning(pixels, zone_num_x, zone_num_y):
 			feature_vector.append(float(count)/float(zone_size_x*zone_size_y))
 
 	return feature_vector
-
-	# for i in range(4):
-	# 	print feature_vector[i*4:(i+1)*4]
 
 
 def read_block(pixels, x, y, zone_size_x, zone_size_y):
@@ -100,28 +103,10 @@ for index in range(0, 26):
 
 		pixels = list(im[n].getdata())
 		width, height = im[n].size
-
 		pixels = binarization(pixels, width*height)
-		
 		pixels = [pixels[i * width:(i + 1) * width] for i in xrange(height)]
-		#print_char(fname, pixels, n)
-
 		im[n].close()
-
-		#img_matrix = []
-
-		# for x in range(width):
-		# 	for y in range(height):
-		# 		curr_pixel = pixels[x][y]
-		# 		if curr_pixel >= 20:
-		# 			curr_pixel = 1
-		# 		else:
-		# 			curr_pixel = 0
-		# 		img_matrix.append(curr_pixel)
 
 		data.append(pixels)
 		target.append(alphabet[0][index])
 
-# pixels = [[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-
-# zoning(pixels, 4, 4)

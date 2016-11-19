@@ -47,7 +47,6 @@ class NeuralNetwork:
 
         return weights
 
-
     def inspect(self):
         print('------')
         print('* Inputs: {}'.format(self.num_inputs))
@@ -111,18 +110,18 @@ class NeuralNetwork:
                     self.hidden_layer.neurons[h].weights[w_ih] -= self.LEARNING_RATE * pd_error_wrt_weight
 
 
+###########
 #
+#   Predicting the output of the test samples
+#   Call this function after training the network
 #
-#   COMPLETE THIS PREDICT FUNCTION
-#
-#
+###########
     def predict(self, X_test):
         predictions = []
         for inputs in X_test:
             predictions.append(self.feed_forward(inputs))
         return predictions
         
-
     def calculate_total_error(self, training_sets):
         total_error = 0
         for t in range(len(training_sets)):
@@ -178,8 +177,6 @@ class Neuron:
             total += self.inputs[i] * self.weights[i]
         return total + self.bias
 
-    # Apply the logistic function to squash the output of the neuron
-    # The result is sometimes referred to as 'net' [2] or 'net' [1]
     def squash(self, total_net_input):
         return 1 / (1 + math.exp(-total_net_input))
 
@@ -222,34 +219,7 @@ class Neuron:
         return self.output * (1 - self.output)
 
     # The total net input is the weighted sum of all the inputs to the neuron and their respective weights:
-     #
     # The partial derivative of the total net input with respective to a given weight (with everything else held constant) then is:
     def calculate_pd_total_net_input_wrt_weight(self, index):
         return self.inputs[index]
-
-###
-
-# Blog post example:
-
-# nn = NeuralNetwork(2, 2, 2, hidden_layer_weights=[0.15, 0.2, 0.25, 0.3], hidden_layer_bias=0.35, output_layer_weights=[0.4, 0.45, 0.5, 0.55], output_layer_bias=0.6)
-# for i in range(10000):
-#     nn.train([0.05, 0.1], [0.01, 0.99])
-#     #print(i, round(nn.calculate_total_error([[[0.05, 0.1], [0.01, 0.99]]]), 9))
-
-
-
-# XOR example:
-
-# training_sets = [
-#     [[0, 0], [0]],
-#     [[0, 1], [1]],
-#     [[1, 0], [1]],
-#     [[1, 1], [0]]
-# ]
-
-# nn = NeuralNetwork(len(training_sets[0][0]), 5, len(training_sets[0][1]))
-# for i in range(10000):
-#     training_inputs, training_outputs = random.choice(training_sets)
-#     nn.train(training_inputs, training_outputs)
-#     print(i, nn.calculate_total_error(training_sets))
 
