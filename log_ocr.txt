@@ -1,3 +1,0 @@
-training iteration[epochs, alpha] : result
-0[1, 0.5] : 0.045643153527
-1[10, 0.5] : 0.0435684647303
