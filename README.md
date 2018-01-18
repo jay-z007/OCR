@@ -22,7 +22,7 @@ It consists of upper and lower case alphabets. Each having almost 200 image samp
   - Hidden nodes - 30
   - Output nodes - 26
   
-**Note - ** The number of nodes in input layer should be equal to the size of a feature vector.
+**Note -** The number of nodes in input layer should be equal to the size of a feature vector.
 
 - Training
   The data is divided into Training [90%] and Testing sets [10%].
